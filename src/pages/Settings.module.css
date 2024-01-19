@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2d2d2d;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+  }
+  
+  .settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #111; 
+    border: 3px solid #00ff00; 
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 #00ff00; /* glow effect */
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+  }
+  
+  .settings-row {
+    margin-top: 30px;
+    width: 100%; 
+  }
+  
+  label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"], textarea {
+    width: 100%;
+
+    font-family: 'Press Start 2P', cursive;
+    padding: 5px;
+    background-color: #222;
+    color: #00ff00; 
+    border: 1px solid #00ff00; 
+  }
+  textarea {
+    height: 25vh;
+    resize: none;
+  }
+  
+  input[type="range"] {
+    width: calc(100% - 10px); /* width to account for padding */
+  }
+  
+  .radio-buttons label {
+    margin: 5px 0; /* Spacing between radio buttons */
+  }
+  
+  button {
+    padding: 10px;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    background-color: #222;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 15px;
+  
+    /* Change button appearance on hover */
+    &:hover {
+      background-color: #00ff00;
+      color: #111;
+    }
+  }
