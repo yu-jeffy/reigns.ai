@@ -1,16 +1,24 @@
 // Settings.js
 // Where the user can set the game settings
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../Data';
+import axios from 'axios';
 import './Settings.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
+    const navigate = useNavigate();
     const {
         settings,
         updateSettings,
         updateApiKey,
+        setCategories,
+        gameState,
+        apiKey,
     } = useGameContext();
+
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleApiKeyChange = (event) => {
         updateApiKey(event.target.value);
@@ -28,9 +36,74 @@ const Settings = () => {
         updateSettings({ theme: event.target.value });
     };
 
+    // State to control when to navigate to /play
+    const [shouldNavigate, setShouldNavigate] = useState(false);
+
+    useEffect(() => {
+        // If categories are set and we should navigate, then navigate to /play
+        if (shouldNavigate && gameState.categories.length > 0) {
+            navigate('/play');
+            setShouldNavigate(false); // Reset the flag after navigating
+        }
+    }, [gameState.categories, shouldNavigate, navigate]);
+
+    const generateCategories = async () => {
+        setIsSaving(true); // Start saving
+
+        const promptMessages = [
+            {
+                "role": "system",
+                "content": ""
+            },
+            {
+                "role": "user",
+                "content": `You are a game engine for Reigns. You are designing the game setup. The theme of this game will be:\n${settings.theme}\nGenerate ${settings.numberOfOptions} categories that the user will need to maintain in this format, default 50 score for each:
+
+              \`\`\`json
+              [
+                { "categoryName": "Name", "score": 50 },
+                { "categoryName": "Name", "score": 50 },
+                // ... additional categories
+              ]
+              \`\`\`
+              
+              Return ONLY JSON in your response.
+              `
+            }
+        ];
+
+        try {
+
+            const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+                model: "gpt-4-1106-preview",
+                messages: promptMessages,
+                temperature: 1
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+            });
+
+            const rawResponse = response.data.choices[0].message.content
+            const removeMarkdown = rawResponse.substring(7, rawResponse.length - 3)
+            const categories = JSON.parse(removeMarkdown.trim());
+            
+
+            setCategories(categories);
+            setIsSaving(false); // Saving finished
+            setShouldNavigate(true); // Set the flag to trigger navigation in useEffect
+
+            navigate('/play');
+        } catch (error) {
+            console.error('Error generating categories:', error);
+            setIsSaving(false); // Saving failed
+        }
+        
+    };
+
     const handleFinish = () => {
-        // TODO: Call GPT API to populate categories based on theme
-        console.log('Finish setup and call GPT API');
+        generateCategories();
     };
 
     return (
@@ -74,7 +147,8 @@ const Settings = () => {
                 <textarea value={settings.theme} onChange={handleThemeChange}></textarea>
             </div>
             <div className="settings-row">
-                <button onClick={handleFinish}>Finish</button>
+                <button onClick={handleFinish} disabled={isSaving}>Finish</button>
+                {isSaving && <label className="saving-label">Saving...</label>}
             </div>
         </div>
     );

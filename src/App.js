@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Game from "./pages/Game";
+import Game from "./pages/Game";
 import Settings from "./pages/Settings";
 import { GameProvider } from "./Data";
 
@@ -10,8 +10,8 @@ export default function App() {
       <GameProvider>
         <BrowserRouter>
           <Routes>
-            <Route exact path="/" element={<Settings />}>
-            </Route>
+            <Route path="/" element={<Settings />}/>
+            <Route path="/play" element={<Game />}/>
           </Routes>
         </BrowserRouter>
       </GameProvider>

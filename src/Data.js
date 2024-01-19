@@ -22,7 +22,7 @@ export const GameProvider = ({ children }) => {
   // State for the game settings
   const [settings, setSettings] = useState({
     numberOfOptions: 4,
-    difficulty: 'normal',
+    difficulty: 'medium',
     theme: 'cyberpunk, William Gibson\'s Sprawl',
   });
 
