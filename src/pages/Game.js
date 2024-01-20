@@ -17,14 +17,8 @@ const Game = () => {
     gameState,
     apiKey,
   } = useGameContext();
-
-  // Placeholder data until fetched from context or API
-  const currentTurnDescription = "The neon lights flicker as you ponder your next decision...";
-  const numberOfOptions = 4; // Replace with actual number from settings
-  const options = new Array(settings.numberOfOptions).fill(0).map((_, i) => ({
-    index: i,
-    description: `Option ${i + 1}`
-  }));
+  const [currentOptions, setCurrentOptions] = useState({choices: []})
+  const [currentScenario, setCurrentScenario] = useState("Welcome!")
 
   // Function to format categories
   const formatCategories = () => {
@@ -137,6 +131,8 @@ const Game = () => {
         scenario = JSON.parse(rawResponse.trim());
       }
 
+      setCurrentOptions({ choices: scenario.choices });
+      setCurrentScenario(scenario.scenario)
       console.log(scenario)
 
 
@@ -166,14 +162,16 @@ const Game = () => {
       </div>
       <div className={styles.mainContent}>
         <div className={styles.currentTurn}>
-          <p>{currentTurnDescription}</p>
+          <p>{currentScenario}</p>
         </div>
         <div className={styles.options}>
-          {options.map((option) => (
-            <div key={option.index} className={styles.option}>
-              <p>{option.description}</p>
-            </div>
-          ))}
+          {currentOptions.choices && currentOptions.choices.length > 0 &&
+            currentOptions.choices.map((option) => (
+              <div key={option.index} className={styles.option}>
+                <p>{option.description}</p>
+              </div>
+            ))
+          }
         </div>
         <div className={styles.footer}>
           {/* Footer buttons */}
