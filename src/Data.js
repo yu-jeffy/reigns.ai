@@ -5,7 +5,7 @@ import React, { createContext, useState, useContext } from 'react';
 
 // Initial state for the game status with dynamic categories
 const initialGameState = {
-  categories: [], // Categories will be populated based on the theme
+  categories: [],
   yearsInReign: 1,
   effects: [],
   keyEvents: [],

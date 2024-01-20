@@ -32,10 +32,13 @@
 
 .currentTurn {
     flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 10px;
     background-color: #111;
     border-bottom: 3px solid #ddd;
     overflow-wrap: normal;
+    width: 85vw;
 }
 
 .options {
@@ -43,6 +46,7 @@
     justify-content: space-around;
     padding: 10px;
     height: 30vh;
+    width: 85vw;
 }
 
 .option {

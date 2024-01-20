@@ -1,7 +1,7 @@
 // Game.js
 // Where the user plays the game
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGameContext } from '../Data';
 import axios from 'axios';
 import styles from './Game.module.css';
@@ -16,9 +16,30 @@ const Game = () => {
     setCategories,
     gameState,
     apiKey,
+    updateGameState,
+    recordTurn,
+    previousTurns
   } = useGameContext();
   const [currentOptions, setCurrentOptions] = useState({ choices: [] })
-  const [currentScenario, setCurrentScenario] = useState("Welcome!")
+  const [currentScenario, setCurrentScenario] = useState("Welcome! Game is initializing...")
+  const [aftermath, setAftermath] = useState("")
+
+  // Complete turn state
+  const [currentTurn, setCurrentTurn] = useState({
+    currentScenario: "",
+    currentOptions: [],
+    optionChosen: {
+      index: null,
+      description: "",
+      categoryUpdates: {}
+    },
+    afterMath: ""
+  });
+
+  // Function to reset the turn
+  const resetTurn = () => {
+    setCurrentTurn({currentScenario: "", currentOptions: [], optionChosen: null, afterMath: ""})
+  };
 
   // Function to format categories
   const formatCategories = () => {
@@ -94,6 +115,7 @@ const Game = () => {
 
   // Function to generate a scenario
   const generateScenario = async () => {
+    setCurrentScenario("Loading turn...");
     const promptMessages = [
       {
         "role": "system",
@@ -133,6 +155,7 @@ const Game = () => {
 
       setCurrentOptions({ choices: scenario.choices });
       setCurrentScenario(scenario.scenario)
+      setCurrentTurn({currentScenario: scenario.scenario, currentOptions: scenario.choices, optionChosen: null, afterMath: ""})
       console.log(scenario)
 
 
@@ -140,6 +163,130 @@ const Game = () => {
     catch (error) {
       console.error('Error generating scenario for this turn:', error);
     }
+  }
+
+
+  // Run generateScenario when page loads
+  const startGame = useRef(false);
+
+  useEffect(() => {
+    if (!startGame.current) {
+      startGame.current = true;
+      generateScenario();
+    }
+  }, []); // empty array to run only once on mount
+
+
+  // Function to handle option selection and update scores
+  const optionChosen = (chosenOption) => {
+    // Copy the current categories
+    const updatedCategories = gameState.categories.map((category) => {
+      // Check if this category has an update in the chosen option (should always have one)
+      if (chosenOption.categoryUpdates.hasOwnProperty(category.categoryName)) {
+        // Calculate the new score
+        const change = chosenOption.categoryUpdates[category.categoryName];
+        return {
+          ...category,
+          score: category.score + change
+        };
+      }
+      // If there is no update for this category, return it unchanged
+      return category;
+    });
+
+    // Update the gameState with the new scores
+    updateGameState({
+      ...gameState,
+      categories: updatedCategories
+    });
+
+    setCurrentTurn(prevTurn => ({
+      ...prevTurn, // Preserve other properties of the currentTurn state
+      optionChosen: chosenOption // Only update the optionChosen property
+    }));
+
+    generateAftermath(chosenOption)
+
+    setCurrentOptions({ choices: [] })
+
+
+
+    // Construct the turn object based on the chosen option
+    const turn = {
+      scenario: currentTurn.currentScenario,
+      options: currentTurn.currentOptions,
+      chosenOption: chosenOption,
+      afterMath: currentTurn.afterMath,
+    };
+
+    // Record the turn
+    recordTurn(turn);
+
+    }
+    
+
+  const generateAftermath = async (chosenOption) => {
+    const promptMessages = [
+      {
+        "role": "system",
+        "content": `You are a game engine for a text based version of Reigns.\n
+
+        The game setting is: ${settings.theme}.\n
+
+        You are tasked with generating storytelling text based on the user decision in the past turn.
+        `
+      },
+      {
+        "role": "user",
+        "content": `Generate a storytelling paragraph for the aftermath/consequences of the choice for this turn.
+
+        Turn Scenario: ${currentScenario}\n
+
+        User Choice: ${chosenOption.description}\n
+        
+        `
+      }
+    ];
+    
+
+    try {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+        model: "gpt-4-1106-preview",
+        messages: promptMessages,
+        temperature: 1,
+        seed: Math.floor(Math.random() * 10000000)
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+      });
+
+      const rawResponse = response.data.choices[0].message.content;
+      let aftermathResponse;
+
+      // Check if the response is surrounded by markdown
+      if (rawResponse.startsWith("```json") && rawResponse.endsWith("```")) {
+        // Extract the JSON string from the markdown
+        const jsonStr = rawResponse.substring(7, rawResponse.length - 3).trim();
+        aftermathResponse = JSON.parse(jsonStr);
+      } else {
+        // Directly parse the response as JSON
+        aftermathResponse = JSON.parse(rawResponse.trim());
+      }
+
+      setCurrentTurn(prevTurn => ({
+        ...prevTurn, // Preserve other properties of the currentTurn state
+        afterMath: aftermathResponse
+      }));
+      setAftermath(aftermathResponse)
+      console.log(aftermathResponse)
+
+    }
+    catch (error) {
+      console.error('Error generating aftermath for this turn:', error);
+    }
+
   }
 
   return (
@@ -161,11 +308,12 @@ const Game = () => {
       <div className={styles.mainContent}>
         <div className={styles.currentTurn}>
           <p>{currentScenario}</p>
+          <p>{aftermath}</p>
         </div>
         <div className={styles.options}>
           {currentOptions.choices && currentOptions.choices.length > 0 &&
             currentOptions.choices.map((option) => (
-              <div key={option.index} className={styles.option}>
+              <div key={option.index} className={styles.option} onClick={() => optionChosen(option)} >
                 <p>{option.description}</p>
                 <div className={styles.categoryUpdates}>
                   {Object.entries(option.categoryUpdates).map(([categoryName, change], index) => {
