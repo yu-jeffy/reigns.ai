@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { useGameContext } from '../Data';
 import axios from 'axios';
-import './Game.module.css';
+import styles from './Game.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const Game = () => {
@@ -17,6 +17,14 @@ const Game = () => {
         gameState,
         apiKey,
     } = useGameContext();
+
+      // Placeholder data until fetched from context or API
+    const currentTurnDescription = "The neon lights flicker as you ponder your next decision...";
+    const numberOfOptions = 4; // Replace with actual number from settings
+    const options = new Array(numberOfOptions).fill(0).map((_, i) => ({
+        index: i,
+        description: `Option ${i + 1}`
+    }));
 
     // Function to format categories
     const formatCategories = () => {
@@ -138,24 +146,31 @@ const Game = () => {
     }
 
     return (
-        <div className="gameContainer">
-            <h1>Game</h1>
-            <div>
-                Theme: {settings.theme} <br />
-                Difficulty: {settings.difficulty} <br />
-                Number of Options: {settings.numberOfOptions} <br />
-                API Key: {apiKey} <br />
-                Categories:
-                {gameState.categories && gameState.categories.map((category, index) => (
-                    <div key={index}>
-                        Category Name: {category.categoryName} <br />
-                        Score: {category.score}
-                    </div>
-                ))}
-                <button onClick={handleGenerateScenario}></button>
+        <div className={styles.gameContainer}>
+          <div className={styles.leftSidebar}>
+            {/* Sidebar content goes here */}
+            <p>Sidebar</p>
+          </div>
+          <div className={styles.mainContent}>
+            <div className={styles.currentTurn}>
+              <p>{currentTurnDescription}</p>
             </div>
+            <div className={styles.options}>
+              {options.map((option) => (
+                <div key={option.index} className={styles.option}>
+                  <p>{option.description}</p>
+                </div>
+              ))}
+            </div>
+            <div className={styles.footer}>
+              {/* Footer buttons */}
+              <button>Previous Turns</button>
+              <button>Settings</button>
+              <button onClick={handleGenerateScenario}>Test Turn</button>
+            </div>
+          </div>
         </div>
-    );
-};
-
-export default Game;
+      );
+    };
+    
+    export default Game;

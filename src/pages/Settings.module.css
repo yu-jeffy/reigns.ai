@@ -1,19 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-body,
-html {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #2d2d2d;
-  color: #00ff00;
-  font-family: 'Press Start 2P', cursive;
-}
-
-.settings-container {
+.settingsContainer {
+  height: 100vh;
+  width: 50vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,17 +14,22 @@ html {
   /* glow effect */
   font-family: 'Press Start 2P', cursive;
   text-align: center;
+  box-sizing: border-box;
 }
 
-.settings-row {
+.settingsRow {
   margin-top: 30px;
   width: 100%;
+  background-color: #111;
+  color: #00ff00;
 }
 
 label {
   display: block;
   margin-top: 15px;
   margin-bottom: 5px;
+  font-family: 'Press Start 2P', cursive;
+
 }
 
 input[type="text"],
@@ -60,7 +54,7 @@ input[type="range"] {
   /* width to account for padding */
 }
 
-.radio-buttons label {
+.radioButtons label {
   margin: 5px 0;
   /* Spacing between radio buttons */
 }
@@ -82,7 +76,7 @@ button {
   }
 }
 
-.saving-label {
+.savingLabel {
   margin-left: 10px;
   font-family: 'Press Start 2P', cursive;
 }

@@ -1,8 +1,53 @@
-.gameContainer{
+.gameContainer {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
+}
+
+.leftSidebar {
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    height: 100%;
+}
+
+.mainContent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.currentTurn {
+    flex: 1;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    overflow: auto;
+}
+
+.options {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.option {
+    flex: 1;
+    margin: 0 5px;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+}
+
+.footer {
+    padding: 10px;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: space-around;
+}
+
+button {
+    padding: 5px 10px;
 }

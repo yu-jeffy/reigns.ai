@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../Data';
 import axios from 'axios';
-import './Settings.module.css';
+import styles from './Settings.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
@@ -119,13 +119,13 @@ const Settings = () => {
     };
 
     return (
-        <div className="settings-container">
+        <div className="{styles.settingsContainer}">
             <h1>Game Settings</h1>
-            <div className="settings-row">
+            <div className="{styles.settingsRow}">
                 <label>OpenAI API Key:</label>
                 <input type="text" value={settings.apiKey} onChange={handleApiKeyChange} />
             </div>
-            <div className="settings-row">
+            <div className="{styles.settingsRow}">
                 <label>Number of options per turn:</label>
                 <div>
                     <input
@@ -138,9 +138,9 @@ const Settings = () => {
                     <span>{settings.numberOfOptions}</span>
                 </div>
             </div>
-            <div className="settings-row">
+            <div className="{styles.settingsRow}">
                 <label>Difficulty:</label>
-                <div className="radio-buttons">
+                <div className="{styles.radioButtons}">
                     {['easy', 'medium', 'hard', 'impossible'].map((difficulty) => (
                         <label key={difficulty}>
                             <input
@@ -154,13 +154,13 @@ const Settings = () => {
                     ))}
                 </div>
             </div>
-            <div className="settings-row">
+            <div className="{styles.settingsRow}">
                 <label>Theme:</label>
                 <textarea value={settings.theme} onChange={handleThemeChange}></textarea>
             </div>
-            <div className="settings-row">
+            <div className="{styles.settingsRow}">
                 <button onClick={handleFinish} disabled={isSaving}>Finish</button>
-                {isSaving && <label className="saving-label">Saving...</label>}
+                {isSaving && <label className={styles.savingLabel}>Saving...</label>}
             </div>
         </div>
     );
