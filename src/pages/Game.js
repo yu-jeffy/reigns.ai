@@ -17,7 +17,7 @@ const Game = () => {
     gameState,
     apiKey,
   } = useGameContext();
-  const [currentOptions, setCurrentOptions] = useState({choices: []})
+  const [currentOptions, setCurrentOptions] = useState({ choices: [] })
   const [currentScenario, setCurrentScenario] = useState("Welcome!")
 
   // Function to format categories
@@ -145,20 +145,18 @@ const Game = () => {
   return (
     <div className={styles.gameContainer}>
       <div className={styles.leftSidebar}>
-        Theme: {settings.theme} <br />
-        Difficulty: {settings.difficulty} <br />
-        Number of Options: {settings.numberOfOptions} <br />
-        API Key: {apiKey} <br />
-        Categories:
+        <br></br>
+        Years in Reign: {gameState.yearsInReign}
+        <br></br><br></br>
         {gameState.categories && gameState.categories.map((category, index) => (
           <div key={index}>
             {category.categoryName}
-            <br/>
+            <br />
             {category.score}
-            <br/>
+            <br /><br />
           </div>
         ))}
-
+        <br></br><br></br>
       </div>
       <div className={styles.mainContent}>
         <div className={styles.currentTurn}>
@@ -169,6 +167,19 @@ const Game = () => {
             currentOptions.choices.map((option) => (
               <div key={option.index} className={styles.option}>
                 <p>{option.description}</p>
+                <div className={styles.categoryUpdates}>
+                  {Object.entries(option.categoryUpdates).map(([categoryName, change], index) => {
+                    // If the change is not zero, show it with a plus or minus sign
+                    return (
+                      change !== 0 && (
+                        <span key={index}>
+                          {`${categoryName}: ${change > 0 ? `+${change}` : change}`}
+                          <br />
+                        </span>
+                      )
+                    );
+                  })}
+                </div>
               </div>
             ))
           }

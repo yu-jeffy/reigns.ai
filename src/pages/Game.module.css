@@ -11,14 +11,15 @@
 }
 
 .leftSidebar {
-    width: 300px;
+    width: 15vw;
     background-color: #333;
     border-right: 3px solid #ddd;
     color: #fff;
     padding: 10px;
     height: 100%;
-    font-size: small;
+    font-size: smaller;
     line-height: 1.5;
+    overflow-wrap: normal;
 }
 
 .mainContent {
@@ -34,7 +35,7 @@
     padding: 10px;
     background-color: #111;
     border-bottom: 3px solid #ddd;
-    overflow: auto;
+    overflow-wrap: normal;
 }
 
 .options {
@@ -45,11 +46,22 @@
 }
 
 .option {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: auto;
     flex: 1;
     margin: 0 5px;
     padding: 5px;
     border: 3px solid #999;
-    text-align: center;
+    text-align: left;
+    overflow-wrap: normal;
+    font-size: smaller;
+    height: 100% - 10px;
+}
+
+.categoryUpdates {
+    font-size: xx-small;
 }
 
 .footer {
