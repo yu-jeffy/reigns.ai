@@ -222,6 +222,8 @@ const Game = () => {
     // Record the turn
     recordTurn(turn);
 
+    setCurrentScenario("Loading turn...")
+
     }
     
 
@@ -262,25 +264,13 @@ const Game = () => {
         },
       });
 
-      const rawResponse = response.data.choices[0].message.content;
-      let aftermathResponse;
-
-      // Check if the response is surrounded by markdown
-      if (rawResponse.startsWith("```json") && rawResponse.endsWith("```")) {
-        // Extract the JSON string from the markdown
-        const jsonStr = rawResponse.substring(7, rawResponse.length - 3).trim();
-        aftermathResponse = JSON.parse(jsonStr);
-      } else {
-        // Directly parse the response as JSON
-        aftermathResponse = JSON.parse(rawResponse.trim());
-      }
+      const aftermathResponse = response.data.choices[0].message.content;
 
       setCurrentTurn(prevTurn => ({
         ...prevTurn, // Preserve other properties of the currentTurn state
         afterMath: aftermathResponse
       }));
       setAftermath(aftermathResponse)
-      console.log(aftermathResponse)
 
     }
     catch (error) {
