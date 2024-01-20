@@ -43,6 +43,7 @@ export const GameProvider = ({ children }) => {
   // Function to record a new turn
   const recordTurn = (turn) => {
     setPreviousTurns((prevTurns) => [...prevTurns, turn]);
+    console.log(turn);
   };
 
   // Function to update the API Key
