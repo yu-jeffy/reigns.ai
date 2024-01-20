@@ -57,7 +57,10 @@ const Settings = () => {
             },
             {
                 "role": "user",
-                "content": `You are a game engine for Reigns. You are designing the game setup. The theme of this game will be:\n${settings.theme}\nGenerate ${settings.numberOfOptions} categories that the user will need to maintain in this format, default 50 score for each:
+                "content": `You are a game engine for Reigns. You are designing the game setup.\n
+                The theme of this game will be: ${settings.theme}\n
+                Generate ${settings.numberOfOptions} categories that the user will need to maintain in this format, default 50 score for each.\n
+                Respond in this EXACT format: \n
 
               \`\`\`json
               [
@@ -85,9 +88,18 @@ const Settings = () => {
                 },
             });
 
-            const rawResponse = response.data.choices[0].message.content
-            const removeMarkdown = rawResponse.substring(7, rawResponse.length - 3)
-            const categories = JSON.parse(removeMarkdown.trim());
+            const rawResponse = response.data.choices[0].message.content;
+            let categories;
+
+            // Check if the response is surrounded by markdown
+            if (rawResponse.startsWith("```json") && rawResponse.endsWith("```")) {
+                // Extract the JSON string from the markdown
+                const jsonStr = rawResponse.substring(7, rawResponse.length - 3).trim();
+                categories = JSON.parse(jsonStr);
+            } else {
+                // Directly parse the response as JSON
+                categories = JSON.parse(rawResponse.trim());
+            }
             
 
             setCategories(categories);
