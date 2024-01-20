@@ -119,13 +119,13 @@ const Settings = () => {
     };
 
     return (
-        <div className="{styles.settingsContainer}">
+        <div className={styles.settingsContainer}>
             <h1>Game Settings</h1>
-            <div className="{styles.settingsRow}">
+            <div className={styles.settingsRow}>
                 <label>OpenAI API Key:</label>
                 <input type="text" value={settings.apiKey} onChange={handleApiKeyChange} />
             </div>
-            <div className="{styles.settingsRow}">
+            <div className={styles.settingsRow}>
                 <label>Number of options per turn:</label>
                 <div>
                     <input
@@ -138,9 +138,9 @@ const Settings = () => {
                     <span>{settings.numberOfOptions}</span>
                 </div>
             </div>
-            <div className="{styles.settingsRow}">
+            <div className={styles.settingsRow}>
                 <label>Difficulty:</label>
-                <div className="{styles.radioButtons}">
+                <div className={styles.radioButtons}>
                     {['easy', 'medium', 'hard', 'impossible'].map((difficulty) => (
                         <label key={difficulty}>
                             <input
@@ -154,11 +154,11 @@ const Settings = () => {
                     ))}
                 </div>
             </div>
-            <div className="{styles.settingsRow}">
+            <div className={styles.settingsRow}>
                 <label>Theme:</label>
                 <textarea value={settings.theme} onChange={handleThemeChange}></textarea>
             </div>
-            <div className="{styles.settingsRow}">
+            <div className={styles.settingsRow}>
                 <button onClick={handleFinish} disabled={isSaving}>Finish</button>
                 {isSaving && <label className={styles.savingLabel}>Saving...</label>}
             </div>
