@@ -20,9 +20,12 @@ const Game = () => {
     recordTurn,
     previousTurns
   } = useGameContext();
+
   const [currentOptions, setCurrentOptions] = useState({ choices: [] })
+  const [showOptions, setShowOptions] = useState(true);
   const [currentScenario, setCurrentScenario] = useState("Welcome! Game is initializing...")
   const [aftermath, setAftermath] = useState("")
+
 
   // Complete turn state
   const [currentTurn, setCurrentTurn] = useState({
@@ -38,7 +41,7 @@ const Game = () => {
 
   // Function to reset the turn
   const resetTurn = () => {
-    setCurrentTurn({currentScenario: "", currentOptions: [], optionChosen: null, afterMath: ""})
+    setCurrentTurn({ currentScenario: "", currentOptions: [], optionChosen: null, afterMath: "" })
   };
 
   // Function to format categories
@@ -115,7 +118,14 @@ const Game = () => {
 
   // Function to generate a scenario
   const generateScenario = async () => {
+    let oldYears = gameState.yearsInReign;
+    updateGameState({
+      ...gameState,
+      yearsInReign: oldYears + 1
+    });
+
     setCurrentScenario("Loading turn...");
+    console.log("generating scenario...");
     const promptMessages = [
       {
         "role": "system",
@@ -154,8 +164,9 @@ const Game = () => {
       }
 
       setCurrentOptions({ choices: scenario.choices });
+      setShowOptions(true);
       setCurrentScenario(scenario.scenario)
-      setCurrentTurn({currentScenario: scenario.scenario, currentOptions: scenario.choices, optionChosen: null, afterMath: ""})
+      setCurrentTurn({ currentScenario: scenario.scenario, currentOptions: scenario.choices, optionChosen: null, afterMath: "" })
       console.log(scenario)
 
 
@@ -178,7 +189,7 @@ const Game = () => {
 
 
   // Function to handle option selection and update scores
-  const optionChosen = (chosenOption) => {
+  const optionChosen = async (chosenOption) => {
     // Copy the current categories
     const updatedCategories = gameState.categories.map((category) => {
       // Check if this category has an update in the chosen option (should always have one)
@@ -194,6 +205,8 @@ const Game = () => {
       return category;
     });
 
+    setShowOptions(false);
+
     // Update the gameState with the new scores
     updateGameState({
       ...gameState,
@@ -205,9 +218,7 @@ const Game = () => {
       optionChosen: chosenOption // Only update the optionChosen property
     }));
 
-    generateAftermath(chosenOption)
-
-    setCurrentOptions({ choices: [] })
+    await generateAftermath(chosenOption);
 
 
 
@@ -222,10 +233,14 @@ const Game = () => {
     // Record the turn
     recordTurn(turn);
 
+    setCurrentOptions({ choices: [] })
+
     setCurrentScenario("Loading turn...")
 
-    }
-    
+    await generateScenario()
+
+  }
+
 
   const generateAftermath = async (chosenOption) => {
     const promptMessages = [
@@ -240,7 +255,7 @@ const Game = () => {
       },
       {
         "role": "user",
-        "content": `Generate a storytelling paragraph for the aftermath/consequences of the choice for this turn.
+        "content": `Generate a few storytelling sentences for the aftermath/consequences of the choice for this turn.
 
         Turn Scenario: ${currentScenario}\n
 
@@ -249,13 +264,14 @@ const Game = () => {
         `
       }
     ];
-    
+
 
     try {
       const response = await axios.post('https://api.openai.com/v1/chat/completions', {
         model: "gpt-4-1106-preview",
         messages: promptMessages,
         temperature: 1,
+        max_tokens: 350,
         seed: Math.floor(Math.random() * 10000000)
       }, {
         headers: {
@@ -301,7 +317,7 @@ const Game = () => {
           <p>{aftermath}</p>
         </div>
         <div className={styles.options}>
-          {currentOptions.choices && currentOptions.choices.length > 0 &&
+          {showOptions && currentOptions.choices && currentOptions.choices.length > 0 &&
             currentOptions.choices.map((option) => (
               <div key={option.index} className={styles.option} onClick={() => optionChosen(option)} >
                 <p>{option.description}</p>

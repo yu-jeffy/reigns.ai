@@ -6,7 +6,7 @@ import React, { createContext, useState, useContext } from 'react';
 // Initial state for the game status with dynamic categories
 const initialGameState = {
   categories: [],
-  yearsInReign: 1,
+  yearsInReign: 0,
   effects: [],
   keyEvents: [],
 };
