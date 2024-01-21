@@ -121,7 +121,7 @@ const Game = () => {
   const generateScenario = async () => {
     let oldYears = gameState.yearsInReign;
 
-    updateGameState({yearsInReign: oldYears + 1});
+    await updateGameState({yearsInReign: oldYears + 1});
 
     setCurrentScenario("Loading turn...");
     console.log("generating scenario...");
