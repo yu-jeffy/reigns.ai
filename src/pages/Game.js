@@ -123,6 +123,7 @@ const Game = () => {
     updateGameState({yearsInReign: oldYears + 1});
 
     setCurrentScenario("Loading turn...");
+    setAftermath("");
     console.log("generating scenario...");
     const promptMessages = [
       {
