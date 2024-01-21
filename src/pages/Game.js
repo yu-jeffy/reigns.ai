@@ -132,7 +132,7 @@ const Game = () => {
       },
       {
         "role": "user",
-        "content": `Generate a scenario for this turn.`
+        "content": `Generate a scenario for this turn. Return ONLY valid JSON.`
       }
     ];
 
@@ -172,6 +172,12 @@ const Game = () => {
     }
     catch (error) {
       console.error('Error generating scenario for this turn:', error);
+      console.log('retrying generateScenario')
+
+      let decrementYears = gameState.yearsInReign;
+
+      updateGameState({yearsInReign: decrementYears - 1});
+      generateScenario();
     }
   }
 
