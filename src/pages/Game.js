@@ -123,7 +123,6 @@ const Game = () => {
     updateGameState({yearsInReign: oldYears + 1});
 
     setCurrentScenario("Loading turn...");
-    setAftermath("");
     console.log("generating scenario...");
     const promptMessages = [
       {
@@ -247,6 +246,7 @@ const Game = () => {
 
 
   const generateAftermath = async (chosenOption) => {
+    setAftermath("");
     const promptMessages = [
       {
         "role": "system",
