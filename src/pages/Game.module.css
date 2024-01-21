@@ -40,6 +40,8 @@
     border-bottom: 3px solid #ddd;
     overflow-wrap: normal;
     width: 85vw;
+    line-height: 1.5;
+    font-size: small;
   }
 
 .currentTurn {
@@ -51,6 +53,8 @@
     border-bottom: 3px solid #ddd;
     overflow-wrap: normal;
     width: 85vw;
+    line-height: 1.5;
+    font-size: small;
 }
 
 .options {

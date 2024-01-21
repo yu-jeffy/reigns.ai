@@ -45,6 +45,8 @@ export const GameProvider = ({ children }) => {
     setPreviousTurns((prevTurns) => [...prevTurns, turn]);
     console.log("turn saved:")
     console.log(turn);
+    console.log("full previous turns:")
+    console.log(previousTurns)
   };
 
   // Function to update the API Key
