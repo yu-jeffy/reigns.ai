@@ -59,7 +59,7 @@ const Settings = () => {
                 "role": "user",
                 "content": `You are a game engine for Reigns. You are designing the game setup.\n
                 The theme of this game will be: ${settings.theme}\n
-                Generate ${settings.numberOfOptions} categories that the user will need to maintain in this format, default 50 score for each.\n
+                Generate ${settings.numberOfOptions} categories that the user will need to maintain, default 50 score for each.\n
                 Respond in this EXACT format: \n
 
               \`\`\`json
