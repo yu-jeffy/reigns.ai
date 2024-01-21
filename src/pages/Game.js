@@ -73,12 +73,13 @@ const Game = () => {
         `;
 
   const scenarioPrompt = `
-        You are a game engine for a text-based version of Reigns. \n
+        You are a game engine for a text-based version of Reigns. You are generating a scenario and choices for year ${gameState.yearsInReign} of the game.\n
         The theme of the game is "${settings.theme}".\n
         There are ${settings.numberOfOptions} choices to be made this turn, affecting the following categories: ${formatCategories()}.\n
-        The difficulty level is set to "${settings.difficulty}".\n
         Generate a scenario for this turn, followed by ${settings.numberOfOptions} choices.\n
         Each choice should include the index, a description, and the effects on each category in the form of increments or decrements.\n
+        The difficulty level is set to "${settings.difficulty}" for the increments and decrements.\n
+        Ensure that each choice has balanced gains and costs. \n
         \n
         Use the EXACT following response format:\n
     
