@@ -119,10 +119,8 @@ const Game = () => {
   // Function to generate a scenario
   const generateScenario = async () => {
     let oldYears = gameState.yearsInReign;
-    updateGameState({
-      ...gameState,
-      yearsInReign: oldYears + 1
-    });
+
+    updateGameState({yearsInReign: oldYears + 1});
 
     setCurrentScenario("Loading turn...");
     console.log("generating scenario...");
@@ -207,11 +205,10 @@ const Game = () => {
 
     setShowOptions(false);
 
+    setCurrentScenario("Processing decision...");
+
     // Update the gameState with the new scores
-    updateGameState({
-      ...gameState,
-      categories: updatedCategories
-    });
+    updateGameState({categories: updatedCategories});
 
     setCurrentTurn(prevTurn => ({
       ...prevTurn, // Preserve other properties of the currentTurn state
@@ -255,7 +252,7 @@ const Game = () => {
       },
       {
         "role": "user",
-        "content": `Generate a few storytelling sentences for the aftermath/consequences of the choice for this turn.
+        "content": `Generate a two storytelling sentences for the aftermath/consequences of the choice for this turn.
 
         Turn Scenario: ${currentScenario}\n
 
@@ -271,7 +268,7 @@ const Game = () => {
         model: "gpt-4-1106-preview",
         messages: promptMessages,
         temperature: 1,
-        max_tokens: 350,
+        max_tokens: 100,
         seed: Math.floor(Math.random() * 10000000)
       }, {
         headers: {
@@ -312,9 +309,10 @@ const Game = () => {
         <br></br><br></br>
       </div>
       <div className={styles.mainContent}>
-        <div className={styles.currentTurn}>
-          <p>{currentScenario}</p>
-          <p>{aftermath}</p>
+        <div className={styles.currentTurnContainer}>
+          <span>Scenario:<br></br> {currentScenario}</span>
+          <div style={{ flexGrow: 1 }} />
+          <span>Outcome of Last Move:<br></br> {aftermath}</span>
         </div>
         <div className={styles.options}>
           {showOptions && currentOptions.choices && currentOptions.choices.length > 0 &&
@@ -340,9 +338,9 @@ const Game = () => {
         </div>
         <div className={styles.footer}>
           {/* Footer buttons */}
-          <button>Previous Turns</button>
-          <button>Settings</button>
-          <button onClick={handleGenerateScenario}>Test Turn</button>
+          <button className={styles.gameButton} >Previous Turns</button>
+          <button className={styles.gameButton} >Restart</button>
+          {/*<button className={styles.gameButton} onClick={handleGenerateScenario}>Test Turn</button>*/}
         </div>
       </div>
     </div>

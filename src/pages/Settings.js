@@ -120,7 +120,7 @@ const Settings = () => {
 
     return (
         <div className={styles.settingsContainer}>
-            <h1>Game Settings</h1>
+            <h1>Setup</h1>
             <div className={styles.settingsRow}>
                 <label>OpenAI API Key:</label>
                 <input type="text" value={settings.apiKey} onChange={handleApiKeyChange} />

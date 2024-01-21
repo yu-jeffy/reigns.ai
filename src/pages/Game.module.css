@@ -30,6 +30,18 @@
     line-height: 1.5;
 }
 
+.currentTurnContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 65vh;
+    padding: 10px;
+    background-color: #111;
+    border-bottom: 3px solid #ddd;
+    overflow-wrap: normal;
+    width: 85vw;
+  }
+
 .currentTurn {
     flex: 1;
     flex-direction: column;
@@ -45,7 +57,7 @@
     display: flex;
     justify-content: space-around;
     padding: 10px;
-    height: 30vh;
+    height: 35vh;
     width: 85vw;
 }
 
@@ -69,13 +81,14 @@
 }
 
 .footer {
+    height: 10vh;
     padding: 10px;
     background-color: #111;
     display: flex;
     justify-content: space-around;
 }
 
-button {
+.gameButton {
     padding: 5px 10px;
     margin-bottom: 10px;
 }
